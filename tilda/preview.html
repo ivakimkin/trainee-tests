@@ -5,8 +5,9 @@
 #ural-tests * {box-sizing:border-box;}
 #ural-tests [hidden] {display:none!important;}
 #ural-tests .ut-wrap {max-width:960px;margin:auto;}
-#ural-tests .ut-brand {color:#f59e0b;font-size:13px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;}
-#ural-tests h1 {font-size:clamp(28px,5vw,44px);line-height:1.15;margin:16px 0;color:#fff;font-weight:750;}
+#ural-tests .ut-brand {text-align:center;color:#f59e0b;font-size:16px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;}
+#ural-tests h1 {text-align:center;font-size:clamp(28px,5vw,44px);line-height:1.15;margin:16px 0;color:#fff;font-weight:750;}
+#ural-tests #ut-menu > p {text-align:center;}
 #ural-tests p {color:#cbd5e1;margin:0 0 28px;}
 #ural-tests .ut-grid {display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;}
 #ural-tests button {font:inherit;cursor:pointer;}
@@ -18,12 +19,12 @@
 #ural-tests .ut-card em {display:block;color:#fbbf24;font-style:normal;margin-top:24px;}
 #ural-tests .ut-back {background:transparent;border:1px solid #64748b;color:#fff;border-radius:8px;padding:10px 16px;margin:0 0 20px;}
 #ural-tests iframe {display:block;width:100%;border:0;min-height:550px;background:#0f172a;}
-#ural-tests .ut-note {font-size:14px;margin-top:24px;}
+#ural-tests .ut-note {text-align:center;font-size:14px;margin-top:24px;}
 @media(max-width:600px){#ural-tests .ut-grid{grid-template-columns:1fr;}#ural-tests .ut-card{padding:20px;}}
 </style>
 <div class="ut-wrap">
 <div id="ut-menu">
-<div class="ut-brand">Уралстратег · Обучение</div>
+<div class="ut-brand">СТРАТЕГ</div>
 <h1 tabindex="-1" id="ut-heading">Проверка знаний 1С:УНФ</h1>
 <p>Выберите тест для подготовки сотрудника. После прохождения вы увидите результат и рекомендации по обучению.</p>
 <div class="ut-grid" id="ut-cards"></div>
