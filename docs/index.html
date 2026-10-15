@@ -3,7 +3,7 @@
 <style>
 body{margin:0;background:#0f172a;color:#f1f5f9;font:16px/1.6 system-ui,sans-serif}
 [hidden]{display:none!important}
-#access-shell{min-height:100svh;display:grid;place-items:center;padding:24px 16px;box-sizing:border-box}
+#access-shell{display:grid;justify-items:center;align-items:start;padding:64px 16px 32px;box-sizing:border-box}
 #access-gate{width:100%;max-width:440px;padding:36px 32px;background:#1e293b;border:1px solid #475569;border-radius:20px;box-sizing:border-box;box-shadow:0 20px 60px #02061740}
 #access-gate .access-brand{color:#f59e0b;font-size:14px;font-weight:600;line-height:20px;letter-spacing:.16em;text-align:center;margin-bottom:20px}
 #access-gate h1{font-size:28px;font-weight:700;line-height:1.2;margin:0 0 12px;text-align:center;text-wrap:balance}
@@ -18,7 +18,7 @@ body{margin:0;background:#0f172a;color:#f1f5f9;font:16px/1.6 system-ui,sans-seri
 #access-error{color:#fca5a5;font-size:14px;line-height:1.5;margin:12px 0 0}
 #access-error:empty{display:none}
 #access-logout{display:block;margin:16px 16px 0 auto;padding:12px;background:#1e293b;color:#fff;border:1px solid #64748b;cursor:pointer}
-@media(max-width:480px){#access-gate{padding:28px 24px;border-radius:16px}#access-gate h1{font-size:26px}}
+@media(max-width:480px){#access-shell{padding-top:32px}#access-gate{padding:28px 24px;border-radius:16px}#access-gate h1{font-size:26px}}
 </style>
 <div id="access-shell">
 <div id="access-gate">
