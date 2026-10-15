@@ -39,6 +39,13 @@
   showQuestion = function () {
     stop();
     originalShow();
+    // Older quizzes do not expose original option IDs in their markup.
+    document.querySelectorAll('.option-item').forEach(function (option, index) {
+      if (!option.hasAttribute('data-original-id')) {
+        option.dataset.originalId = typeof activeOptionsOrder !== 'undefined'
+          ? activeOptionsOrder[index].originalIdx : index;
+      }
+    });
     timer.hidden = false;
     deadline = Date.now() + limit;
     tick();
