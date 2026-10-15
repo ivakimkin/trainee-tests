@@ -57,7 +57,7 @@ const config=__CONFIG__;
 const key='ural-tests-access-'+config.digest;
 const gate=document.getElementById('access-gate'),tests=document.getElementById('ural-tests');
 function unlock(){document.getElementById('access-shell').hidden=true;gate.hidden=true;tests.hidden=false;document.getElementById('ut-heading').focus();}
-try{if(sessionStorage.getItem(key)==='yes')unlock();}catch(e){}
+// Authentication is intentionally kept in memory only: reload always locks the page.
 window.addEventListener('ural-tests-lock',function(){try{sessionStorage.removeItem(key);}catch(e){}location.reload();});
 document.getElementById('access-form').addEventListener('submit',async function(event){
  event.preventDefault();const button=this.querySelector('button');button.disabled=true;
@@ -66,7 +66,7 @@ document.getElementById('access-form').addEventListener('submit',async function(
   const bytes=await crypto.subtle.digest('SHA-256',new TextEncoder().encode(config.salt+input.value));
   const digest=Array.from(new Uint8Array(bytes),b=>b.toString(16).padStart(2,'0')).join('');
   if(digest!==config.digest){error.textContent='Неверный пароль. Попробуйте ещё раз.';input.select();return;}
-  input.value='';error.textContent='';try{sessionStorage.setItem(key,'yes');}catch(e){}unlock();
+  input.value='';error.textContent='';unlock();
  }catch(e){error.textContent='Не удалось выполнить вход. Откройте страницу через HTTPS и повторите.';}
  finally{button.disabled=false;}
 });
