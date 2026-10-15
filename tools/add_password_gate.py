@@ -43,7 +43,7 @@ body{margin:0;background:#0f172a;color:#f1f5f9;font:16px/1.6 system-ui,sans-seri
 <p class="access-description">Введите пароль, чтобы открыть тесты.</p>
 <form id="access-form">
 <label class="access-label" for="access-password">Пароль</label>
-<input id="access-password" type="password" autocomplete="current-password" required aria-describedby="access-error">
+<input id="access-password" type="password" autofocus autocomplete="current-password" required aria-describedby="access-error">
 <button type="submit">Войти</button>
 <p id="access-error" role="alert"></p>
 </form>
@@ -55,6 +55,7 @@ script='''<script>
 (function(){
 const config=__CONFIG__;
 const key='ural-tests-access-'+config.digest;
+document.getElementById('access-password').focus({preventScroll:true});
 const gate=document.getElementById('access-gate'),tests=document.getElementById('ural-tests');
 function unlock(){document.getElementById('access-shell').hidden=true;gate.hidden=true;tests.hidden=false;document.getElementById('ut-heading').focus();}
 // Authentication is intentionally kept in memory only: reload always locks the page.
