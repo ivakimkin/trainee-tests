@@ -27,21 +27,17 @@ for filename, title, description in QUIZZES:
  new ResizeObserver(function(){parent.postMessage({type:'ural-quiz-height',height:document.body.offsetHeight},'*');}).observe(document.body);
 })();
 </script>'''
-    if filename == 'Test_scretar_25v1.html':
-        source = source.replace('function restartQuiz() {\n    initQuiz();\n}', "function restartQuiz() {\n    parent.postMessage({type:'ural-quiz-lock'},'*');\n}")
-        source = source.replace('<div class="quiz-container" id="quiz-box">', '<div class="quiz-container" id="quiz-box"><div class="variant-toolbar"><span>1С:УНФ</span></div>')
-        extra += """<style>
+    source = source.replace('function restartQuiz() {\n    initQuiz();\n}', "function restartQuiz() {\n    parent.postMessage({type:'ural-quiz-lock'},'*');\n}")
+    source = source.replace('<div class="quiz-container" id="quiz-box">', '<div class="quiz-container" id="quiz-box"><div class="variant-toolbar"><span>1С:УНФ</span></div>')
+    extra += """<style>
 body {padding:4px !important;}
 .variant-toolbar {display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:8px;margin-bottom:20px;padding-bottom:16px;border-bottom:1px solid #334155;}
 .variant-toolbar span {grid-column:2;color:#f59e0b;font-size:20px;font-weight:800;white-space:nowrap;}
-#variant-back {justify-self:start;font:500 12px/1.4 system-ui,sans-serif;white-space:nowrap;background:transparent;color:#cbd5e1;border:1px solid #475569;border-radius:7px;padding:7px 9px;cursor:pointer;}
-#variant-back:hover {background:#334155;color:#fff;}
-#variant-back:focus-visible {outline:2px solid #f59e0b;outline-offset:3px;}
-#game-stage > .header-title,#result-stage > .header-title {display:none !important;}
-@media(max-width:420px){.variant-toolbar {grid-template-columns:1fr auto 1fr;}.variant-toolbar span {font-size:18px;}#variant-back {font-size:11px;padding:7px;}}
+body > .app-header,.quiz-container > .brand-header,#game-stage > .header-title,#result-stage > .header-title {display:none !important;}
+@media(max-width:420px){.variant-toolbar {grid-template-columns:1fr auto 1fr;}.variant-toolbar span {font-size:18px;}}
 </style>"""
     source = source.replace('</body>', extra + '</body>')
-    items.append(dict(internal_back=filename == 'Test_scretar_25v1.html', title=title, description=description, html=base64.b64encode(source.encode()).decode()))
+    items.append(dict(internal_back=True, title=title, description=description, html=base64.b64encode(source.encode()).decode()))
 fragment = '''<!-- Insert this entire fragment in ONE Tilda T123 HTML block. Set page password in Tilda before publishing. -->
 <section id="ural-tests" lang="ru">
 <style>
