@@ -36,6 +36,17 @@ body {padding:4px !important;}
 body > .app-header,.quiz-container > .brand-header,#game-stage > .header-title,#result-stage > .header-title {display:none !important;}
 @media(max-width:420px){.variant-toolbar {grid-template-columns:1fr auto 1fr;}.variant-toolbar span {font-size:18px;}}
 </style>"""
+    if filename == 'Test_scretar_25v2.html':
+        extra += """<style>
+#question-timer {grid-column:3;grid-row:1;justify-self:end;color:#cbd5e1;font:700 20px/1.2 system-ui,sans-serif;font-variant-numeric:tabular-nums;}
+#question-timer[hidden] {display:none !important;}
+#question-timer.timer-urgent {color:#fca5a5;}
+@media(max-width:420px){#question-timer{font-size:18px;}}
+.variant-toolbar span {grid-row:1;}
+.timeout-feedback {background:#451a1a !important;border-left-color:#ef4444 !important;color:#fecaca !important;}
+</style>"""
+        extra += '<script>' + (ROOT / 'tools/variant2-timer.js').read_text() + '</script>'
+        source = source.replace('<button class="btn-next" onclick="startQuiz()">', '<p style="color:#cbd5e1;font-size:15px;line-height:1.5;text-align:center">На каждый вопрос — 12 секунд. Если время истечёт, ответ будет засчитан как ошибка.</p><button class="btn-next" onclick="startQuiz()">', 1)
     source = source.replace('</body>', extra + '</body>')
     items.append(dict(internal_back=True, title=title, description=description, html=base64.b64encode(source.encode()).decode()))
 fragment = '''<!-- Insert this entire fragment in ONE Tilda T123 HTML block. Set page password in Tilda before publishing. -->

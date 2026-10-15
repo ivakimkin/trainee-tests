@@ -1,0 +1,22 @@
+const {chromium}=require('playwright');const fs=require('node:fs');const assert=require('node:assert/strict');
+(async()=>{const browser=await chromium.launch({executablePath:'/usr/bin/chromium',args:['--no-sandbox']});
+try{for(const width of [1280,375]){
+ const page=await browser.newPage({viewport:{width,height:900}});
+ await page.route('https://ivakimkin.github.io/trainee-tests/',r=>r.fulfill({contentType:'text/html',body:fs.readFileSync('docs/index.html','utf8')}));
+ await page.goto('https://ivakimkin.github.io/trainee-tests/');await page.locator('#access-password').fill('Inform');await page.locator('#access-form button').click();await page.locator('.ut-card').nth(2).click();const frame=page.frames()[1];
+ await frame.waitForSelector('.variant-toolbar');assert(await frame.locator('#question-timer').isHidden());
+ await frame.locator('#welcome-stage button').click();assert.equal(await frame.locator('#question-timer').innerText(),'12');
+ await frame.waitForFunction(()=>document.getElementById('question-timer').textContent==='10');assert.equal(await frame.locator('#question-timer').innerText(),'10');
+ await page.screenshot({path:`tilda/variant2-timer-${width}.png`,fullPage:true});
+ await frame.evaluate(()=>document.querySelector('.option-item[data-original-id="'+quizData[0].c+'"]').click());
+ assert.equal(await frame.evaluate(()=>score),1);await page.waitForTimeout(500);assert.equal(await frame.locator('#question-timer').innerText(),'10');
+ await frame.evaluate(()=>document.getElementById('btn-next').click());assert.equal(await frame.locator('#question-timer').innerText(),'12');
+ await frame.waitForFunction(()=>document.getElementById('question-timer').textContent==='00',{},{timeout:15000});assert.equal(await frame.locator('#question-timer').innerText(),'00');assert.equal(await frame.evaluate(()=>score),1);assert(await frame.locator('.timeout-feedback').isVisible());assert.equal(await frame.locator('.option-item.correct').count(),1);
+ await frame.locator('.option-item').first().click();assert.equal(await frame.evaluate(()=>score),1);assert.equal(await frame.locator('.hint-box').count(),1);
+ await page.screenshot({path:`tilda/variant2-timeout-${width}.png`,fullPage:true});
+ assert(await frame.evaluate(()=>document.documentElement.scrollWidth<=innerWidth));
+ await frame.evaluate(()=>{document.getElementById('btn-next').click();for(let i=2;i<quizData.length;i++){const q=quizData[i];document.querySelector('.option-item[data-original-id="'+q.c+'"]').click();document.getElementById('btn-next').click();}});
+ assert.equal(await frame.locator('#score-text').innerText(),'24 / 25');assert(await frame.locator('#question-timer').isHidden());assert(await frame.locator('#rec-list-container li').count()>0);
+ await frame.evaluate(()=>document.querySelector('#result-stage button').click());await page.locator('#access-gate').waitFor({state:'visible'});
+ console.log(`${width}px: countdown, freeze on answer, reset, timeout once, no late answer, score 24/25, recommendations and password retry OK`);await page.close();
+}}finally{await browser.close();}})().catch(e=>{console.error(e);process.exitCode=1;});
