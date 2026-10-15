@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Тест: 1С:УНФ для Продавца</title>
+    <style>
+        body { 
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif !important; 
+            background-color: #0f172a !important; 
+            color: #f1f5f9 !important; 
+            margin: 0 !important; 
+            padding: 20px !important; 
+            display: flex !important; 
+            justify-content: center !important; 
+            align-items: center !important;
+            min-height: 100vh !important;
+        }
+        .quiz-container { 
+            background: #1e293b !important; 
+            border: 1px solid #334155 !important;
+            border-radius: 12px !important; 
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3) !important; 
+            max-width: 650px !important; 
+            width: 100% !important; 
+            padding: 30px !important; 
+            box-sizing: border-box !important; 
+            position: relative !important;
+        }
+        .brand-header {
+            text-align: center !important;
+            font-size: 28px !important;
+            font-weight: 800 !important;
+            color: #f59e0b !important;
+            letter-spacing: 2px !important;
+            margin-bottom: 25px !important;
+            border-bottom: 2px solid #334155 !important;
+            padding-bottom: 10px !important;
+            text-transform: uppercase !important;
+        }
+        h2 { color: #ffffff !important; margin-top: 0 !important; font-size: 22px !important; text-align: center !important; line-height: 1.4 !important; }
+        .progress { color: #94a3b8 !important; font-size: 14px !important; margin-bottom: 20px !important; font-weight: 500 !important; text-align: center !important; }
+        .question { font-size: 18px !important; font-weight: 600 !important; margin-bottom: 20px !important; line-height: 1.5 !important; color: #f8fafc !important; }
+        .options-list { list-style: none !important; padding: 0 !important; margin: 0 !important; }
+        .option-item { background: #334155 !important; border: 2px solid #475569 !important; border-radius: 8px !important; padding: 14px 18px !important; margin-bottom: 12px !important; cursor: pointer !important; font-size: 16px !important; color: #e2e8f0 !important; transition: all 0.2s ease !important; display: flex !important; align-items: center !important; }
+        .option-item:hover { background: #475569 !important; border-color: #64748b !important; }
+        .option-item.correct { background: #064e3b !important; border-color: #10b981 !important; color: #a7f3d0 !important; font-weight: 500 !important; }
+        .option-item.incorrect { background: #7f1d1d !important; border-color: #ef4444 !important; color: #fca5a5 !important; }
+        .hint-box { background: #1e3a8a !important; border-left: 4px solid #3b82f6 !important; padding: 15px !important; margin-top: 15px !important; border-radius: 0 8px 8px 0 !important; font-size: 15px !important; line-height: 1.5 !important; color: #dbeafe !important; }
+        .btn-next { background: #2563eb !important; color: #ffffff !important; border: none !important; padding: 14px 24px !important; font-size: 16px !important; border-radius: 8px !important; cursor: pointer !important; font-weight: 600 !important; margin-top: 15px !important; width: 100% !important; transition: background 0.2s !important; }
+        .btn-next:hover { background: #1d4ed8 !important; }
+        .result-screen { text-align: left !important; padding: 10px 0 !important; }
+        .score-big { font-size: 54px !important; font-weight: 800 !important; color: #3b82f6 !important; margin: 15px 0 !important; text-align: center !important; }
+        .verdict { font-size: 18px !important; font-weight: 600 !important; color: #e2e8f0 !important; margin-bottom: 25px !important; line-height: 1.4 !important; text-align: center !important; }
+        .recommendations { background: #0f172a !important; border: 1px solid #334155 !important; border-radius: 8px !important; padding: 20px !important; margin-bottom: 25px !important; }
+        .rec-title { font-size: 16px !important; font-weight: 700 !important; color: #f59e0b !important; margin-bottom: 10px !important; text-transform: uppercase !important; letter-spacing: 0.5px !important; }
+        .rec-list { margin: 0 !important; padding-left: 20px !important; color: #cbd5e1 !important; font-size: 15px !important; line-height: 1.6 !important; }
+        .rec-list li { margin-bottom: 8px !important; }
+        .start-desc { font-size: 16px !important; line-height: 1.6 !important; color: #cbd5e1 !important; text-align: center !important; margin-bottom: 25px !important; }
+    </style>
+</head>
+<body>
+
+<div class="quiz-container" id="quiz-box">
+    <div class="brand-header">1С:УНФ</div>
+
+    <!-- СТАРТОВЫЙ ЭКРАН -->
+    <div id="start-stage" class="result-screen">
+        <h2>Тестирование квалификации продавца</h2>
+        <div class="start-desc">
+            Добро пожаловать в интерактивный тренажер по системе 1С:Управление нашей фирмой.<br><br>
+            Тест содержит <strong>25 практических вопросов</strong>, проверяющих навыки работы с РМК (рабочим местом кассира), заказами покупателей, резервированием, оформлением возвратов, номенклатурой и складскими остатками.<br><br>
+            Варианты ответов перемешиваются случайным образом при каждом запуске!
+        </div>
+        <button class="btn-next" onclick="startQuiz()">НАЧАТЬ ТЕСТ</button>
+    </div>
+
+    <!-- ИГРОВОЙ ЭКРАН -->
+    <div id="game-stage" style="display: none;">
+        <div class="progress" id="progress-text">Вопрос 1 из 25</div>
+        <div class="question" id="question-text">Загрузка вопроса...</div>
+        <ul class="options-list" id="options-container"></ul>
+        <div id="feedback-container"></div>
+        <button class="btn-next" id="btn-next" style="display: none;" onclick="nextQuestion()">Следующий вопрос</button>
+    </div>
+    
+    <!-- ЭКРАН РЕЗУЛЬТАТОВ -->
+    <div id="result-stage" class="result-screen" style="display: none;">
+        <h2>Тест завершен!</h2>
+        <div class="score-big" id="score-text">0 / 25</div>
+        <div class="verdict" id="verdict-text"></div>
+        <div id="recommendations-box" class="recommendations" style="display: none;">
+            <div class="rec-title">📋 Направления для доработки:</div>
+            <ul class="rec-list" id="rec-list-container"></ul>
+        </div>
+        <button class="btn-next" onclick="restartQuiz()">Пройти заново</button>
+    </div>
+</div>
+
+<script>
+const quizData = [
+    { q: "Покупатель-юридическое лицо просит выставить документ, бронирующий товар на складе. Какой документ вы создадите в 1С:УНФ?", a: ["Счет на оплату", "Заказ покупателя", "Расходная накладная", "Сверка расчетов"], c: 1, cat: "Работа с клиентами и заказами", h: "Резервирование и фиксация намерений клиента происходят в 'Заказе покупателя'. Счет только предлагает оплатить." },
+    { q: "Как поставить жесткую бронь на товар под конкретного клиента, чтобы его не продал другой менеджер?", a: ["Написать комментарий в заказе", "Заполнить колонку 'Резерв' в строке товара внутри Заказа покупателя", "Просто выписать счет на оплату", "Переместить товар на виртуальный склад"], c: 1, cat: "Работа с клиентами и заказами", h: "В УНФ резерв ставится непосредственно в строке табличной части Заказа покупателя в графе 'Резерв'." },
+    { q: "Каким итоговым документом менеджер закрывает сделку отгрузки товара клиенту, списывая его с баланса компании?", a: ["Счет на оплату", "Расходная накладная", "Приходная накладная", "Заказ покупателя"], c: 1, cat: "Работа с клиентами и заказами", h: "Расходная накладная является главным первичным отгрузочным документом для юридических лиц." },
+    { q: "Где розничный продавец в 1С:УНФ осуществляет быстрые продажи, пробивает чеки и принимает оплату от физлиц?", a: ["В общем журнале документов", "В Рабочем месте кассира (РМК)", "В разделе Закупки", "В справочнике Номенклатура"], c: 1, cat: "Розничная торговля (РМК)", h: "Интерфейс РМК создан специально для оперативной работы на кассе: сканирования штрихкодов и пробития чеков." },
+    { q: "Какая кнопка в РМК используется, если клиент платит частично наличными, а частично банковской картой?", a: ["Оплата наличными", "Безналичная оплата", "Смешанная оплата (или Сложная оплата)", "Сертификат"], c: 2, cat: "Розничная торговля (РМК)", h: "Режим смешанной оплаты позволяет разделить сумму чека на разные типы платежных средств." },
+    { q: "Каким регламентным действием завершается рабочий день продавца-кассира на торговой точке?", a: ["Простое выключение компьютера", "Закрытие кассовой смены (с формированием Отчета о розничных продажах)", "Удаление всех заказов за день", "Выгрузка базы на флешку"], c: 1, cat: "Розничная торговля (РМК)", h: "Закрытие смены архивирует розничные чеки и превращает их в один сводный 'Отчет о розничных продажах'." },
+    { q: "Менеджер смотрит отчет по складу. Физический остаток товара — 10 штук, а в графе 'Доступно' стоит 2. Что это значит?", a: ["8 штук бракованные", "8 штук находятся в резерве под заказы других клиентов", "8 штук еще не привезли от поставщика", "Программа зависла"], c: 1, cat: "Контроль склада и цен", h: "Количество 'Доступно' — это свободный остаток для продажи (Физический остаток минус текущий Резерв)." },
+    { q: "Где продавец может быстро проверить актуальную отпускную цену товара для розницы или опта в 1С:УНФ?", a: ["В карточке Договора поставки", "В прайс-листах или карточке Номенклатуры во вкладке 'Цены'", "В Авансовом отчете", "В настройках пользователя"], c: 1, cat: "Контроль склада и цен", h: "История цен и действующие прайс-листы привязаны к карточкам товаров в справочнике 'Номенклатура'." },
+    { q: "Клиент вернул бракованный товар через неделю после покупки. Какой документ формирует менеджер для возврата?", a: ["Расходная накладная", "Приходная накладная (с видом операции: Возврат от покупателя)", "Заказ покупателя", "Корректировка региональных настроек"], c: 1, cat: "Возвраты и корректировки", h: "Возврат от покупателя не в день покупки оформляется Приходной накладной с соответствующей операцией." },
+    { q: "Покупатель оформляет возврат товара в розничной точке прямо в день покупки, до закрытия кассовой смены. Как это сделать?", a: ["Оформить расходную накладную", "Открыть РМК и выполнить операцию через кнопку 'Возврат' (в рамках открытой смены)", "Выписать чек вручную на бумаге", "Сказать клиенту прийти завтра"], c: 1, cat: "Возвраты и корректировки", h: "Возвраты 'день в день' делаются кассиром напрямую через интерфейс РМК с автоматической отменой по кассе." },
+    { q: "Товар одного наименования (например, футболка) продается в разных цветах и размерах. Как это правильно вести в УНФ?", a: ["Создавать под каждый цвет отдельную карточку товара", "Использовать механизм 'Характеристик номенклатуры' внутри одной карточки", "Записывать размеры в комментарии", "Вести учет в Excel"], c: 1, cat: "Товарная матрица и справочники", h: "Характеристики позволяют не раздувать базу и вести учет по свойствам (цвет, размер) внутри одной позиции." },
+    { q: "Что произойдет с остатками товара на складе, если менеджер заполнил Расходную накладную, но не провел ее (нет зеленой галочки)?", a: ["Товары спишутся со склада", "Ничего не произойдет, документ останется черновиком и не изменит остатки", "Товары заблокируются", "Сумма запишется в долг клиенту"], c: 1, cat: "Товарная матрица и справочники", h: "Непроведенный документ — это черновик. Он не делает движений по складу и расчетам." },
+    { q: "Где в карточке товара продавец может посмотреть его уникальный заводской штрихкод или артикул?", a: ["В договоре контрагента", "В карточке номенклатуры (в соответствующих полях и вкладке Штрихкоды)", "В банковских реквизитах", "На заставке программы"], c: 1, cat: "Товарная матрица и справочники", h: "Артикулы, штрихкоды и коды ТН ВЭД хранятся в карточке описания Номенклатуры." },
+    { q: "Клиент просит выслать ему документ УПД на отгрузку. Какое действие должен совершить менеджер в 1С:УНФ?", a: ["Создать отдельный документ 'УПД'", "Открыть Расходную накладную, нажать кнопку 'Печать' и выбрать 'УПД'", "Скачать бланк из интернета", "Выдать клиенту кассовый чек"], c: 1, cat: "Работа с клиентами и заказами", h: "Универсальный передаточный документ является печатной формой Расходной накладной." },
+    { q: "Каким документом продавец может проанализировать сумму своей личной выручки и объем продаж за выбранный период?", a: ["Остатки товаров по складам", "Отчет 'Продажи' или 'Валовая прибыль по менеджерам'", "Кассовая книга", "Анкетирование контрагентов"], c: 1, cat: "Контроль склада и цен", h: "Оценка личной эффективности и маржинальности продаж ведется через управленческие отчеты подсистемы Продаж." },
+    { q: "Покупатель потерял чек. Каким образом кассир в РМК может быстро найти нужную прошлую продажу?", a: ["Переустановить программу", "Использовать поиск в РМК по номеру, дате, сумме или времени чека", "Искать в Закупках", "Сказать, что восстановить невозможно"], c: 1, cat: "Розничная торговля (РМК)", h: "Архив чеков в РМК позволяет гибко находить документы по параметрам для оформления дубликатов или возвратов." },
+    { q: "Менеджер согласовал клиенту скидку 5% на всю партию. Где в Заказе покупателя вводится этот параметр?", a: ["Пишется текстом в названии", "В колонке '% Скидки' в табличной части документа или через кнопку 'Дисконт'", "В карточке нашей организации", "В банковской выписке"], c: 1, cat: "Работа с клиентами и заказами", h: "Управленческие скидки и наценки рассчитываются в строках табличных частей документов продажи." },
+    { q: "Где продавец активирует автоматическое заполнение данных клиента (название фирмы, юридический адрес) по номеру ИНН?", a: ["В кассовом аппарате", "В карточке Контрагента с помощью кнопки 'Заполнить по ИНН'", "В справочнике Номенклатура", "Вручную на клавиатуре"], c: 1, cat: "Товарная матрица и справочники", h: "Встроенный сервис автозаполнения по ИНН работает внутри карточки создания нового Контрагента." },
+    { q: "Клиент внес предоплату наличными за будущую поставку мебели. Каким документом продавец примет деньги в кассу?", a: ["Расходная накладная", "Поступление в кассу (Приходный кассовый ордер)", "Платежное поручение", "Акт сверки"], c: 1, cat: "Розничная торговля (РМК)", h: "Поступление наличных денег в кассу офиса от покупателя фиксируется Приходным кассовым ордером." },
+    { q: "Покупатель просит отложить товар на 2 часа до приезда курьера без создания полноценного заказа. Правильно ли это?", a: ["Да, записать на листке бумаги", "Нет, в 1С:УНФ резерв без документа-основания (Заказ покупателя) поставить невозможно", "Да, просто убрать товар под стол", "Да, удалить его из базы"], c: 1, cat: "Работа с клиентами и заказами", h: "Программа блокирует остатки на складе только на основании официального электронного документа." },
+    { q: "В отчете 'Остатки товаров' менеджер видит отрицательный остаток (-3 шт.). О чем это сигнализирует?", a: ["Товар зарезервирован", "Оформлена отгрузка товара, который фактически не был оприходован на склад в программе", "Всё идет хорошо", "Товар удален"], c: 1, cat: "Контроль склада и цен", h: "Отрицательный остаток возникает при нарушении хронологии или отгрузке 'вслепую' без проведения закупки." },
+    { q: "Клиент утверждает, что оплатил счет день назад, но деньги не пришли. Где менеджер может увидеть историю оплат по банку?", a: ["В справочнике Номенклатура", "В отчете 'Взаиморасчеты' или связавшись с бухгалтером через журнал банковских документов", "В РМК", "Налоговая отчетность"], c: 1, cat: "Контроль склада и цен", h: "История безналичных расчетов отслеживается по отчетам взаиморасчетов с клиентами." },
+    { q: "Каким образом продавец может проверить, привязана ли к клиенту индивидуальная колонка цен (например, 'Опт от 50 тыс.')?", a: ["Спросить у клиента", "Проверить поле 'Вид цен' в карточке Договора с данным Контрагентом", "В настройках склада", "В кассовой смене"], c: 1, cat: "Товарная матрица и справочники", h: "Ценовые правила и категории прайс-листов закрепляются в условиях договоров с контрагентами." },
+    { q: "Кассир случайно пробил товар дважды в один чек в РМК. Как убрать лишнюю строчку до пробития чека?", a: ["Удалить позицию кнопкой 'Del' / 'Удалить строку' или уменьшить количество в строке", "Выключить кассу из розетки", "Пробить чек как есть и сделать возврат", "Аннулировать всю смену"], c: 0, cat: "Розничная торговля (РМК)", h: "До финальной оплаты кассир может редактировать состав и количество позиций текущего чека." },
+    { q: "В какой карточке справочника 1С:УНФ продавец указывает единицу измерения товара (шт, кг, литр, комплект)?", a: ["В карточке Контрагента", "В карточке Номенклатуры", "В настройках склада", "В документе реализации"], c: 1, cat: "Товарная матрица и справочники", h: "Базовые физические свойства и единицы хранения задаются строго внутри карточки Номенклатуры." }
+];
+
+const categoryRecs = {
+    "Работа с клиентами и заказами": "Повторить алгоритмы работы с <strong>Заказами покупателей</strong>, выставление счетов, правила бронирования товара через графу <strong>'Резерв'</strong> и формирование цепочки отгрузки по Расходным накладным (включая печать УПД).",
+    "Розничная торговля (РМК)": "Изучить функционал <strong>Рабочего места кассира (РМК)</strong>: проведение смешанных оплат, поиск чеков в архиве без оригинала документа, корректное открытие/закрытие смен и ведение кассовой дисциплины.",
+    "Контроль склада и цен": "Разобраться в складских отчетах. Четко понимать разницу между балансовым остатком и графой <strong>'Доступно'</strong>. Изучить причины появления отрицательных остатков на складах компании.",
+    "Возвраты и корректировки": "Закрепить правила оформления возвратов: регламент отмены операций 'день в день' внутри открытой смены РМК и порядок оформления <strong>Приходных накладных (Возврат от покупателя)</strong> в последующие дни.",
+    "Товарная матрица и справочники": "Повторить работу со справочниками. Научиться использовать механизм <strong>Характеристик номенклатуры</strong> (для цветов/размеров), заводить Контрагентов через автозаполнение по ИНН и всегда контролировать проведение документов (зеленая галочка)."
+};
+
+let currentQuestionIdx = 0;
+let score = 0;
+let isAnswered = false;
+let failedCategories = new Set();
+let activeOptionsOrder = [];
+
+function startQuiz() {
+    document.getElementById("start-stage").style.display = "none";
+    document.getElementById("game-stage").style.display = "block";
+    initQuiz();
+}
+
+function initQuiz() {
+    currentQuestionIdx = 0;
+    score = 0;
+    failedCategories.clear();
+    document.getElementById("result-stage").style.display = "none";
+    document.getElementById("game-stage").style.display = "block";
+    showQuestion();
+}
+
+function showQuestion() {
+    isAnswered = false;
+    document.getElementById("btn-next").style.display = "none";
+    document.getElementById("feedback-container").innerHTML = "";
+    
+    const qData = quizData[currentQuestionIdx];
+    document.getElementById("progress-text").innerText = `Вопрос ${currentQuestionIdx + 1} из ${quizData.length}`;
+    document.getElementById("question-text").innerText = qData.q;
+    
+    const optionsContainer = document.getElementById("options-container");
+    optionsContainer.innerHTML = "";
+    
+    let optionsWithIndices = qData.a.map((opt, idx) => ({ text: opt, originalIdx: idx }));
+    
+    for (let i = optionsWithIndices.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [optionsWithIndices[i], optionsWithIndices[j]] = [optionsWithIndices[j], optionsWithIndices[i]];
+    }
+    
+    activeOptionsOrder = optionsWithIndices;
+    
+    optionsWithIndices.forEach((optObj, currentDisplayIdx) => {
+        const li = document.createElement("li");
+        li.className = "option-item";
+        li.innerText = optObj.text;
+        li.onclick = () => selectOption(li, optObj.originalIdx);
+        optionsContainer.appendChild(li);
+    });
+}
+
+function selectOption(element, selectedOriginalIdx) {
+    if (isAnswered) return;
+    isAnswered = true;
+    
+    const qData = quizData[currentQuestionIdx];
+    const items = document.querySelectorAll(".option-item");
+    
+    if (selectedOriginalIdx === qData.c) {
+        element.classList.add("correct");
+        score++;
+    } else {
+        element.classList.add("incorrect");
+        activeOptionsOrder.forEach((optObj, displayIdx) => {
+            if (optObj.originalIdx === qData.c) {
+                items[displayIdx].classList.add("correct");
+            }
+        });
+        failedCategories.add(qData.cat);
+    }
+    
+    const hintDiv = document.createElement("div");
+    hintDiv.className = "hint-box";
+    hintDiv.innerHTML = `<strong>${selectedOriginalIdx === qData.c ? "✨ Рассчитано верно!" : "❌ Ошибка в регламенте."}</strong><br>${qData.h}`;
+    document.getElementById("feedback-container").appendChild(hintDiv);
+    
+    document.getElementById("btn-next").style.display = "block";
+}
+
+function nextQuestion() {
+    currentQuestionIdx++;
+    if (currentQuestionIdx < quizData.length) {
+        showQuestion();
+    } else {
+        showResult();
+    }
+}
+
+function showResult() {
+    document.getElementById("game-stage").style.display = "none";
+    document.getElementById("result-stage").style.display = "block";
+    document.getElementById("score-text").innerText = `${score} / ${quizData.length}`;
+    
+    const percent = (score / quizData.length) * 100;
+    let text = "";
+    
+    if (percent === 100) {
+        text = "🏆 Превосходно! Менеджер безупречно владеет функционалом 1С:УНФ, знает правила резервирования и кассовую дисциплину РМК!";
+        document.getElementById("recommendations-box").style.display = "none";
+    } else {
+        if (percent >= 80) text = "👍 Отличный показатель! Сотрудник готов к работе на кассе и ведению стандартных продаж.";
+        else if (percent >= 60) text = "📋 Базовый уровень пройден, но допускаются критические ошибки в складских остатках или оформлении возвратов.";
+        else text = "❌ Аттестация не пройдена. Продавцу строго запрещено самостоятельно работать в РМК и резервировать позиции до прохождения обучения.";
+        
+        const recListContainer = document.getElementById("rec-list-container");
+        recListContainer.innerHTML = "";
+        
+        failedCategories.forEach(cat => {
+            const li = document.createElement("li");
+            li.innerHTML = `<strong>Блок «${cat}»:</strong> ${categoryRecs[cat]}`;
+            recListContainer.appendChild(li);
+        });
+        
+        document.getElementById("recommendations-box").style.display = "block";
+    }
+    
+    document.getElementById("verdict-text").innerText = text;
+}
+
+function restartQuiz() {
+    initQuiz();
+}
+</script>
+</body>
+</html>

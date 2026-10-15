@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Продвинутый тест: Основы 1С:УНФ для секретаря</title>
+    <style>
+        body { 
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif !important; 
+            background-color: #0f172a !important; 
+            color: #f1f5f9 !important; 
+            margin: 0 !important; 
+            padding: 20px !important; 
+            display: flex !important; 
+            flex-direction: column !important;
+            align-items: center !important; 
+        }
+        .app-header {
+            font-size: 28px !important;
+            font-weight: 800 !important;
+            color: #f59e0b !important;
+            margin-bottom: 20px !important;
+            letter-spacing: 1px !important;
+            text-transform: uppercase !important;
+        }
+        .quiz-container { 
+            background: #1e293b !important; 
+            border: 1px solid #334155 !important;
+            border-radius: 12px !important; 
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3) !important; 
+            max-width: 650px !important; 
+            width: 100% !important; 
+            padding: 30px !important; 
+            box-sizing: border-box !important; 
+        }
+        h2 { color: #ffffff !important; margin-top: 0 !important; border-bottom: 2px solid #334155 !important; padding-bottom: 15px !important; font-size: 22px !important; }
+        .progress { color: #94a3b8 !important; font-size: 14px !important; margin-bottom: 20px !important; font-weight: 500 !important; }
+        .question { font-size: 18px !important; font-weight: 600 !important; margin-bottom: 20px !important; line-height: 1.5 !important; color: #f8fafc !important; }
+        .options-list { list-style: none !important; padding: 0 !important; margin: 0 !important; }
+        .option-item { background: #334155 !important; border: 2px solid #475569 !important; border-radius: 8px !important; padding: 14px 18px !important; margin-bottom: 12px !important; cursor: pointer !important; font-size: 16px !important; color: #e2e8f0 !important; transition: all 0.2s ease !important; display: flex !important; align-items: center !important; }
+        .option-item:hover { background: #475569 !important; border-color: #64748b !important; }
+        .option-item.correct { background: #064e3b !important; border-color: #10b981 !important; color: #a7f3d0 !important; font-weight: 500 !important; }
+        .option-item.incorrect { background: #7f1d1d !important; border-color: #ef4444 !important; color: #fca5a5 !important; }
+        .hint-box { background: #1e3a8a !important; border-left: 4px solid #3b82f6 !important; padding: 15px !important; margin-top: 15px !important; border-radius: 0 8px 8px 0 !important; font-size: 15px !important; line-height: 1.5 !important; color: #dbeafe !important; }
+        .btn-next { background: #2563eb !important; color: #ffffff !important; border: none !important; padding: 12px 24px !important; font-size: 16px !important; border-radius: 8px !important; cursor: pointer !important; font-weight: 600 !important; margin-top: 15px !important; width: 100% !important; transition: background 0.2s !important; }
+        .btn-next:hover { background: #1d4ed8 !important; }
+        .result-screen { text-align: left !important; padding: 10px 0 !important; }
+        .score-big { font-size: 48px !important; font-weight: 800 !important; color: #3b82f6 !important; margin: 15px 0 !important; text-align: center !important; }
+        .verdict { font-size: 18px !important; font-weight: 600 !important; color: #e2e8f0 !important; margin-bottom: 25px !important; line-height: 1.4 !important; text-align: center !important; }
+        .recommendations { background: #0f172a !important; border: 1px solid #334155 !important; border-radius: 8px !important; padding: 20px !important; margin-bottom: 25px !important; }
+        .rec-title { font-size: 16px !important; font-weight: 700 !important; color: #f59e0b !important; margin-bottom: 10px !important; text-transform: uppercase !important; letter-spacing: 0.5px !important; }
+        .rec-list { margin: 0 !important; padding-left: 20px !important; color: #cbd5e1 !important; font-size: 15px !important; line-height: 1.6 !important; }
+        .rec-list li { margin-bottom: 8px !important; }
+        .welcome-screen { text-align: center !important; padding: 20px 0 !important; }
+        .welcome-desc { font-size: 16px !important; color: #94a3b8 !important; line-height: 1.6 !important; margin-bottom: 30px !important; }
+    </style>
+</head>
+<body>
+
+<div class="app-header">1С:УНФ</div>
+
+<div class="quiz-container" id="quiz-box">
+    <!-- Стартовый экран -->
+    <div id="start-stage" class="welcome-screen">
+        <h2>Продвинутый тест для секретаря</h2>
+        <div class="welcome-desc">
+            Этот тест состоит из 30 практических вопросов по работе в программе 1С:УНФ. <br>
+            Он включает проверку знаний по продажам, закупкам, деньгам, а также современным модулям ЭДО, учету оригиналов документов и КЭДО.
+        </div>
+        <button class="btn-next" onclick="startQuiz()">НАЧАТЬ ТЕСТ</button>
+    </div>
+
+    <!-- Игровой экран -->
+    <div id="game-stage" style="display: none;">
+        <div class="progress" id="progress-text">Вопрос 1 из 30</div>
+        <div class="question" id="question-text">Загрузка вопроса...</div>
+        <ul class="options-list" id="options-container"></ul>
+        <div id="feedback-container"></div>
+        <button class="btn-next" id="btn-next" style="display: none;" onclick="nextQuestion()">Следующий вопрос</button>
+    </div>
+    
+    <!-- Экран результатов -->
+    <div id="result-stage" class="result-screen" style="display: none;">
+        <h2>Тест завершен!</h2>
+        <div class="score-big" id="score-text">0 / 30</div>
+        <div class="verdict" id="verdict-text"></div>
+        <div id="recommendations-box" class="recommendations" style="display: none;">
+            <div class="rec-title">📋 Рекомендации по обучению:</div>
+            <ul class="rec-list" id="rec-list-container"></ul>
+        </div>
+        <button class="btn-next" onclick="restartQuiz()">Пройти заново</button>
+    </div>
+</div>
+
+<script>
+const quizData = [
+    { q: "Руководитель попросил выставить счет на оплату постоянному клиенту в 1С:УНФ. В каком разделе создается этот документ?", a: ["Деньги -> Счета на оплату", "Продажи -> Счета на оплату", "Закупки -> Счета поставщикам", "Компания -> Документы"], c: 1, cat: "Продажи", h: "Счет выставляется клиенту (покупателю) в рамках торгового процесса подсистемы Продаж." },
+    { q: "Клиент забирает товар со склада. Какой документ раздела 'Продажи' нужно оформить для фактической отгрузки?", a: ["Заказ покупателя", "Розничная продажа", "Расходная накладная", "Приходная накладная"], c: 2, cat: "Продажи", h: "Этот документ буквально списывает ('расходует') запасы со склада в пользу контрагента." },
+    { q: "Курьер привез новые офисные кресла от поставщика вместе с накладной. Через какой раздел правильно отразить приход?", a: ["Продажи -> Расходные накладные", "Склад -> Перемещение запасов", "Деньги -> Расход из кассы", "Закупки -> Приходные накладные"], c: 3, cat: "Закупки", h: "Вы приобретаете материальные ценности у сторонней организации — это фиксируется в Закупках." },
+    { q: "Сотрудник отчитывается по чекам за канцелярию, купленную на личные или подотчетные наличные. Где ввести Авансовый отчет?", a: ["Деньги -> Авансовые отчеты", "Продажи -> Розничные продажи", "Зарплата -> Подотчетники", "Закупки -> Поступления"], c: 0, cat: "Деньги и Подотчет", h: "Авансовые отчеты напрямую относятся к подсистеме учета наличных и безналичных финансов («Деньги»)." },
+    { q: "Как в 1С:УНФ сформировать печатную форму УПД (Универсального передаточного документа) для покупателя?", a: ["В отдельном глобальном разделе 'Налоги и отчетность'", "Через ручную корректировку проводок в конце месяца", "Выбрать пункт 'УПД' в меню 'Печать' внутри проведенной Расходной накладной", "Через справочник 'Номенклатура'"], c: 2, cat: "Продажи", h: "УПД — это форма товарной накладной, совмещенная со счетом-фактурой, она распечатывается из документа отгрузки." },
+    { q: "Каким документом в 1С:УНФ оформляется оказание услуг клиенту (например, аренда или сервис)?", a: ["Приходная накладная", "Расходная накладная (вкладка Услуги)", "Заказ-наряд", "Счет на оплату"], c: 1, cat: "Продажи", h: "В УНФ Расходная накладная универсальна: на вкладке 'Товары' отгружают вещи, на вкладке 'Услуги' — акты." },
+    { q: "Вам нужно завести ИНН, КПП и адрес новой компании-клиента. В какой справочник УНФ нужно внести эти данные?", a: ["Номенклатура", "Контрагенты", "Организации", "Сотрудники"], c: 1, cat: "Интерфейс и Базовые справочники", h: "Все внешние партнеры (клиенты, поставщики, госструктуры) в экосистеме 1С называются Контрагентами." },
+    { q: "Где посмотреть, кто из клиентов задолжал компании по итогам месяца, если в УНФ нет классической бухгалтерской ОСВ?", a: ["В разделе Продажи -> Отчеты -> Расчеты с покупателями", "В справочнике Склады", "В кассовой книге", "В разделе Налоги"], c: 0, cat: "Интерфейс и Базовые справочники", h: "УНФ — управленческая программа. Задолженности проверяются через наглядный отчёт 'Расчеты с покупателями'." },
+    { q: "Клиент прислал оплату по безналичному расчету. Где секретарь может проверить поступление и разнести банковскую выписку?", a: ["Продажи -> Оплаты", "Деньги -> Документы по банку", "Компания -> Финансы", "Склад -> Чеки"], c: 1, cat: "Деньги и Подотчет", h: "Единый журнал безналичных платежей и импорта банковских выписок находится в меню 'Деньги -> Документы по банку'." },
+    { q: "Поставщик требует составить документ взаимных расчетов за полгода. Каким документом проверяется долг перед поставщиком?", a: ["Счет поставщика", "Акт сверки расчетов (в Корректировках долга)", "Приходная накладная", "Оборотно-сальдовая ведомость"], c: 1, cat: "Закупки", h: "Акты сверки в УНФ находятся в подразделах расчетов или через журнал 'Корректировки долга'." },
+    { q: "Мы наняли самозанятого дизайнера для оформления вывески. Каким документом отразить выполнение его работ?", a: ["Трудовой договор", "Закупки -> Приходная накладная (вид операции: Услуги)", "Авансовый отчет", "Расходный кассовый ордер"], c: 1, cat: "Закупки", h: "Работы сторонних физлиц и самозанятых приходуются как обычные услуги через Приходную накладную." },
+    { q: "Куда прикрепить скан-копию чека из приложения 'Мой налог', полученную от самозанятого исполнителя?", a: ["В справочник Номенклатура", "Нажать на значок 'Скрепка' (Присоединенные файлы) вверху Приходной накладной", "Отправить в раздел Компания", "Записать в комментарии текстом"], c: 1, cat: "Закупки", h: "Значок скрепки в любом документе 1С позволяет хранить файлы, сканы первички и договоров прямо в базе." },
+    { q: "Директор поручил подготовить в банк распоряжение на оплату интернета. Какой документ нужно создать?", a: ["Расход со счета", "Платежное поручение", "Авансовый отчет", "Счет на оплату"], c: 1, cat: "Деньги и Подотчет", h: "Платежное поручение отправляет банку команду перевести деньги. Сам перевод подтвердит выписка 'Расход со счета'." },
+    { q: "В какой справочник добавляются товары, материалы, услуги или работы, которыми торгует фирма?", a: ["Контрагенты", "Номенклатура", "Характеристики", "Категории"], c: 1, cat: "Интерфейс и Базовые справочники", h: "Весь перечень материальных и нематериальных позиций в 1С называется Номенклатурой." },
+    { q: "Чтобы не искать часто используемые накладные и счета по вкладкам, какую кнопку (значок) нужно нажать для быстрого доступа?", a: ["Печать", "Звездочку (Добавить в Избранное)", "Провести и закрыть", "Найти"], c: 1, cat: "Интерфейс и Базовые справочники", h: "Желтая звездочка добавляет любой журнал или отчет в личную панель быстрого доступа 'Избранное'." },
+    { q: "Что означает зеленая галочка на иконке документа в общем списке 1С?", a: ["Документ помечен на удаление", "Документ записан как черновик, но не проведен", "Документ успешно проведен (изменения отразились в учете и отчетах)", "Документ заблокирован"], c: 2, cat: "Интерфейс и Базовые справочники", h: "Только проведенный документ (с галочкой) меняет остатки денег, товаров и влияет на взаиморасчеты." },
+    { q: "Если документ сохранен, но галочки на нем нет (просто белый листок), видят ли его отчеты остатков?", a: ["Да, видят", "Нет, документ сохранен как черновик и не влияет на остатки и долги", "Видят только в конце месяца", "Видят только счета на оплату"], c: 1, cat: "Интерфейс и Базовые справочники", h: "Непроведенный документ — это черновик. Он существует в базе, но не делает движений в регистрах." },
+    { q: "Компания оплатила аренду офиса через банк. Каким итоговым документом списываются безналичные деньги со счета фирмы?", a: ["Платежное поручение", "Расход со счета (в выписке банка)", "Авансовый отчет", "Расходный кассовый ордер"], c: 1, cat: "Деньги и Подотчет", h: "Фактическое списание денег по банковской выписке фиксируется документом 'Расход со счета'." },
+    { q: "Поставщик прислал счет за коммунальные услуги. Где секретарю зарегистрировать этот входящий счет для согласования оплаты?", a: ["Продажи -> Счета покупателям", "Закупки -> Счета поставщиков", "Деньги -> Касса", "Компания -> Аналитика"], c: 1, cat: "Закупки", h: "Входящие счета от тех, у кого мы покупаем услуги или товары, регистрируются в 'Счетах поставщиков' в Закупках." },
+    { q: "Где в 1С:УНФ посмотреть отчет по остаткам бумаги, картриджей и других материалов на конкретном складе компании?", a: ["Продажи -> Расчеты", "Закупки или Склад -> Отчеты -> Остатки товаров на складах", "Деньги -> Кассовая книга", "Компания -> Пульс бизнеса"], c: 1, cat: "Интерфейс и Базовые справочники", h: "Контроль физических остатков ТМЦ на складе осуществляется через складские отчеты по остаткам." },
+    { q: "Какая кнопка в карточке Контрагента позволяет автоматически завить название, адрес и телефон фирмы зная только ее номер ИНН?", a: ["Заполнить по ИНН", "Найти в базе", "Проверить ФНС", "Загрузить данные"], c: 0, cat: "Интерфейс и Базовые справочники", h: "Сервис 1С:Контрагент автоматически подтягивает официальные реквизиты юридического лица из ЕГРЮЛ по ИНН." },
+    { q: "Покупатель вернул товар, который ему не подошел. Каким документом в разделе 'Продажи' УНФ отражается возврат?", a: ["Расходная накладная с минусом", "Приходная накладная от покупателя", "Корректировка долга", "Приходная накладная (с видом операции: Возврат от покупателя)"], c: 3, cat: "Продажи", h: "Возвраты от клиентов в УНФ оформляются через Приходную накладную с измененным видом операции 'Возврат от покупателя'." },
+    { q: "В договоре с поставщиком указано, что мы платим строго в евро, а расчет идет в рублях по курсу ЦБ. Где секретарь проверяет валюту?", a: ["В карточке Номенклатуры", "В карточке Договора в поле 'Валюта расчетов'", "В выписке кассы", "В карточке организации"], c: 1, cat: "Закупки", h: "Валюта, условия оплаты и сроки действия соглашения настраиваются внутри карточки конкретного Договора поставки." },
+    { q: "Директор попросил выдать сотруднику деньги из кассы наличными на покупку хозтоваров. Какой документ формирует секретарь?", a: ["Расход со счета", "Расход из кассы", "Авансовый отчет", "Платежное поручение"], c: 1, cat: "Деньги и Подотчет", h: "Для выдачи физических бумажных денег из кассы компании используется документ 'Расход из кассы'." },
+    { q: "Где в УНФ посмотреть общую сумму долгов нашей компании перед всеми поставщиками сразу?", a: ["В отчете 'Расчеты с поставщиками' (раздел Закупки -> Отчеты)", "В кассовой книге", "В справочнике Номенклатура", "В разделе Настройки"], c: 0, cat: "Интерфейс и Базовые справочники", h: "Аналитический отчет 'Расчеты с поставщиками' наглядно группирует наши долги перед партнерами по закупкам." },
+    
+    // Новые 5 продвинутых вопросов
+    { q: "Как секретарю отметить в 1С:УНФ, что контрагент прислал подписанный бумажный оригинал накладной или акта?", a: ["Написать капсом в комментарии 'ОРИГИНАЛ'", "Поставить флажок 'Оригинал получен' внизу или на верхней панели документа", "Удалить этот документ и завести заново", "Отправить скан директору в мессенджер"], c: 1, cat: "Продвинутый документооборот и ЭДО", h: "Специальный статус/чекбокс 'Оригинал получен' позволяет бухгалтерии быстро фильтровать документы, по которым сдана бумажная первичка." },
+    { q: "Поставщик прислал пачку бумажных накладных. Какая встроенная ИИ-функция в 1С:УНФ позволяет не вводить строки руками?", a: ["Сервис '1С:Распознавание первичных документов' (загрузка по скану/фото)", "Кнопка 'Заполнить по ИНН'", "Голосовой ввод текста", "Автоматический калькулятор цен"], c: 0, cat: "Продвинутый документооборот и ЭДО", h: "Этот встроенный сервис искусственного интеллекта сканирует файлы или фотографии документов и сам заполняет таблицы накладных." },
+    { q: "Какой стандартный актуальный формат электронного УПД (актуальный на 2026 год) поддерживает система 1С-ЭДО?", a: ["Формат версии 5.01", "Формат версии 5.03 (приказ ФНС)", "Формат PDF/A", "Текстовый формат DOCX"], c: 1, cat: "Продвинутый документооборот и ЭДО", h: "Современный формат электронного документооборота для УПД соответствует последним актуальным спецификациям ФНС (версия 5.03)." },
+    { q: "Сотрудники просят выдать расчетные листки по зарплате в электронном виде. Какой встроенный сервис ЭДО для кадров используется в 1С?", a: ["1С-Отчетность", "1С:Кабинет сотрудника (КЭДО)", "1С:ДиректБанк", "1С:Линк"], c: 1, cat: "Продвинутый документооборот и ЭДО", h: "Сервис '1С:Кабинет сотрудника' реализует Кадровый ЭДО (КЭДО), позволяя обмениваться расчетными листками и заявлениями онлайн." },
+    { q: "Как отправить клиенту счет на оплату напрямую из 1С без скачивания файла на компьютер и отправки через стороннюю почту?", a: ["Такой функции в 1С не существует", "Нажать кнопку со значком 'Конверт/Письмо' на верхней панели проведенного счета", "Скопировать код документа в буфер", "Сделать снимок экрана телефона"], c: 1, cat: "Продвинутый документооборот и ЭДО", h: "Иконка конверта отправляет документ по электронной почте прямо из интерфейса 1С, используя настроенную учетную запись." }
+];
+
+const categoryRecs = {
+    "Продажи": "Повторить алгоритм вывода <strong>УПД</strong> через 'Печать' в Расходных накладных, а также правила оформления Счетов покупателям и Актов возврата.",
+    "Закупки": "Изучить раздел 'Закупки' (оприходование товаров через <strong>Приходные накладные</strong>, регистрацию услуг от <strong>самозанятых</strong> и карточки Договоров поставки).",
+    "Деньги и Подотчет": "Разобрать структуру раздела 'Деньги': создание <strong>Авансовых отчетов</strong> по чекам, подготовку <strong>Платежных поручений</strong> и обработку Банковских выписок.",
+    "Интерфейс и Базовые справочники": "Закрепить основы интерфейса: работу со справочниками <strong>'Контрагенты' (заполнение по ИНН)</strong> и 'Номенклатура', запуск аналитических отчетов по расчетам, добавление папок в <strong>'Избранное' (звездочка)</strong> и проверку статуса проведения документов (зеленая галочка).",
+    "Продвинутый документооборот и ЭДО": "Изучить современные модули автоматизации: работу с сервисом <strong>1С:Распознавание документов</strong>, контроль оригиналов первички, интеграцию <strong>1С-ЭДО (формат 5.03)</strong> и кадровый учет через <strong>1С:Кабинет сотрудника</strong>."
+};
+
+let currentQuestionIdx = 0;
+let score = 0;
+let isAnswered = false;
+let failedCategories = new Set();
+
+function startQuiz() {
+    document.getElementById("start-stage").style.display = "none";
+    document.getElementById("game-stage").style.display = "block";
+    showQuestion();
+}
+
+function showQuestion() {
+    isAnswered = false;
+    document.getElementById("btn-next").style.display = "none";
+    document.getElementById("feedback-container").innerHTML = "";
+    
+    const qData = quizData[currentQuestionIdx];
+    document.getElementById("progress-text").innerText = `Вопрос ${currentQuestionIdx + 1} из ${quizData.length}`;
+    document.getElementById("question-text").innerText = qData.q;
+    
+    const optionsContainer = document.getElementById("options-container");
+    optionsContainer.innerHTML = "";
+    
+    qData.a.forEach((opt, idx) => {
+        const li = document.createElement("li");
+        li.className = "option-item";
+        li.innerText = opt;
+        li.onclick = () => selectOption(li, idx);
+        optionsContainer.appendChild(li);
+    });
+}
+
+function selectOption(element, selectedIdx) {
+    if (isAnswered) return;
+    isAnswered = true;
+    
+    const qData = quizData[currentQuestionIdx];
+    const items = document.querySelectorAll(".option-item");
+    
+    if (selectedIdx === qData.c) {
+        element.classList.add("correct");
+        score++;
+    } else {
+        element.classList.add("incorrect");
+        items[qData.c].classList.add("correct");
+        failedCategories.add(qData.cat);
+    }
+    
+    const hintDiv = document.createElement("div");
+    hintDiv.className = "hint-box";
+    hintDiv.innerHTML = `<strong>${selectedIdx === qData.c ? "✨ Верно!" : "❌ Ошибка."}</strong><br>${qData.h}`;
+    document.getElementById("feedback-container").appendChild(hintDiv);
+    
+    document.getElementById("btn-next").style.display = "block";
+}
+
+function nextQuestion() {
+    currentQuestionIdx++;
+    if (currentQuestionIdx < quizData.length) {
+        showQuestion();
+    } else {
+        showResult();
+    }
+}
+
+function showResult() {
+    document.getElementById("game-stage").style.display = "none";
+    document.getElementById("result-stage").style.display = "block";
+    document.getElementById("score-text").innerText = `${score} / ${quizData.length}`;
+    
+    const percent = (score / quizData.length) * 100;
+    let text = "";
+    
+    if (percent === 100) {
+        text = "🏆 Идеально! Секретарь полностью готов к самостоятельной работе в 1С:УНФ и знает интерфейс как профессионал!";
+        document.getElementById("recommendations-box").style.display = "none";
+    } else {
+        if (percent >= 80) text = "👍 Отличный результат! Продвинутые навыки работы с УНФ и ЭДО усвоены на высоком уровне.";
+        else if (percent >= 60) text = "📋 Тест сдан, но есть пробелы в сложных темах. Изучите сформированные ниже рекомендации.";
+        else text = "❌ Тест не пройден. Сотруднику необходимо повторно пройти обучение по интерфейсу и продвинутым блокам ЭДО.";
+        
+        const recListContainer = document.getElementById("rec-list-container");
+        recListContainer.innerHTML = "";
+        
+        failedCategories.forEach(cat => {
+            const li = document.createElement("li");
+            li.innerHTML = `<strong>Раздел «${cat}»:</strong> ${categoryRecs[cat]}`;
+            recListContainer.appendChild(li);
+        });
+        
+        document.getElementById("recommendations-box").style.display = "block";
+    }
+    
+    document.getElementById("verdict-text").innerText = text;
+}
+
+function restartQuiz() {
+    initQuiz();
+}
+
+function initQuiz() {
+    currentQuestionIdx = 0;
+    score = 0;
+    failedCategories.clear();
+    document.getElementById("result-stage").style.display = "none";
+    document.getElementById("start-stage").style.display = "block";
+}
+
+window.onload = initQuiz;
+</script>
+</body>
+</html>
