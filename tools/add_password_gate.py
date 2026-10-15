@@ -20,30 +20,36 @@ gate='''
 <style>
 body{margin:0;background:#0f172a;color:#f1f5f9;font:16px/1.6 system-ui,sans-serif}
 [hidden]{display:none!important}
-#access-gate{max-width:420px;margin:12vh auto;padding:28px;background:#1e293b;border:1px solid #475569;border-radius:16px;box-sizing:border-box}
-#access-gate h1{font-size:28px;line-height:1.2;margin:10px 0 18px;text-align:center}
-#access-gate .access-description{text-align:center}
+#access-shell{min-height:100svh;display:grid;place-items:center;padding:24px 16px;box-sizing:border-box}
+#access-gate{width:100%;max-width:440px;padding:36px 32px;background:#1e293b;border:1px solid #475569;border-radius:20px;box-sizing:border-box;box-shadow:0 20px 60px #02061740}
+#access-gate .access-brand{color:#f59e0b;font-size:14px;font-weight:600;line-height:20px;letter-spacing:.16em;text-align:center;margin-bottom:20px}
+#access-gate h1{font-size:28px;font-weight:700;line-height:1.2;margin:0 0 12px;text-align:center;text-wrap:balance}
+#access-gate .access-description{font-size:15px;line-height:1.5;color:#cbd5e1;text-align:center;margin:0 0 24px;text-wrap:balance}
 #access-gate .access-label{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap}
-#access-gate label{display:block;margin:16px 0 8px}
-#access-gate input,#access-gate button,#access-logout{font:inherit;box-sizing:border-box;border-radius:8px;padding:12px}
-#access-gate input{width:100%;background:#0f172a;color:#fff;border:1px solid #64748b}
-#access-gate button{width:100%;margin-top:16px;background:#2563eb;color:#fff;border:0;cursor:pointer}
+#access-gate input,#access-gate button,#access-logout{font:inherit;box-sizing:border-box;border-radius:10px}
+#access-gate input{display:block;width:100%;height:48px;padding:10px 14px;background:#0f172a;color:#fff;border:1px solid #64748b;font-size:18px}
+#access-gate button{display:block;width:100%;min-height:48px;padding:10px 16px;margin-top:12px;background:#2563eb;color:#fff;border:0;font-weight:600;cursor:pointer}
+#access-gate button:hover{background:#1d4ed8}
+#access-gate button:disabled{opacity:.7;cursor:wait}
 #access-gate input:focus-visible,#access-gate button:focus-visible,#access-logout:focus-visible{outline:3px solid #f59e0b;outline-offset:3px}
-#access-error{color:#fca5a5;min-height:26px;margin:8px 0 0}
-#access-logout{display:block;margin:16px 16px 0 auto;background:#1e293b;color:#fff;border:1px solid #64748b;cursor:pointer}
-@media(max-width:480px){#access-gate{margin:40px 16px}}
+#access-error{color:#fca5a5;font-size:14px;line-height:1.5;margin:12px 0 0}
+#access-error:empty{display:none}
+#access-logout{display:block;margin:16px 16px 0 auto;padding:12px;background:#1e293b;color:#fff;border:1px solid #64748b;cursor:pointer}
+@media(max-width:480px){#access-gate{padding:28px 24px;border-radius:16px}#access-gate h1{font-size:26px}}
 </style>
+<div id="access-shell">
 <div id="access-gate">
-<div style="color:#f59e0b;font-size:13px;letter-spacing:.12em;text-align:center">СТРАТЕГ</div>
+<div class="access-brand">СТРАТЕГ</div>
 <h1>Вход в тестирование</h1>
 <p class="access-description">Введите пароль, чтобы открыть тесты.</p>
 <form id="access-form">
 <label class="access-label" for="access-password">Пароль</label>
 <input id="access-password" type="password" autocomplete="current-password" required aria-describedby="access-error">
-<p id="access-error" role="alert"></p>
 <button type="submit">Войти</button>
+<p id="access-error" role="alert"></p>
 </form>
 <noscript>Для входа и прохождения тестов включите JavaScript.</noscript>
+</div>
 </div>
 <button id="access-logout" type="button" hidden>Выйти</button>
 '''
@@ -52,7 +58,7 @@ script='''<script>
 const config=__CONFIG__;
 const key='ural-tests-access-'+config.digest;
 const gate=document.getElementById('access-gate'),tests=document.getElementById('ural-tests'),logout=document.getElementById('access-logout');
-function unlock(){gate.hidden=true;tests.hidden=false;logout.hidden=false;document.getElementById('ut-heading').focus();}
+function unlock(){document.getElementById('access-shell').hidden=true;gate.hidden=true;tests.hidden=false;logout.hidden=false;document.getElementById('ut-heading').focus();}
 try{if(sessionStorage.getItem(key)==='yes')unlock();}catch(e){}
 document.getElementById('access-form').addEventListener('submit',async function(event){
  event.preventDefault();const button=this.querySelector('button');button.disabled=true;
