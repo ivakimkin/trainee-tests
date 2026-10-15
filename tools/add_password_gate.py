@@ -32,11 +32,11 @@ body{margin:0;background:#0f172a;color:#f1f5f9;font:16px/1.6 system-ui,sans-seri
 @media(max-width:480px){#access-gate{margin:40px 16px}}
 </style>
 <div id="access-gate">
-<div style="color:#f59e0b;font-size:13px;letter-spacing:.12em">УРАЛСТРАТЕГ · ОБУЧЕНИЕ</div>
+<div style="color:#f59e0b;font-size:13px;letter-spacing:.12em;text-align:center">СТРАТЕГ</div>
 <h1>Вход в тестирование</h1>
 <p>Введите пароль, чтобы открыть тесты.</p>
 <form id="access-form">
-<label for="access-password">Пароль</label>
+<label for="access-password">Пароль:</label>
 <input id="access-password" type="password" autocomplete="current-password" required aria-describedby="access-error">
 <p id="access-error" role="alert"></p>
 <button type="submit">Войти</button>
