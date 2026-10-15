@@ -4,7 +4,9 @@
 body{margin:0;background:#0f172a;color:#f1f5f9;font:16px/1.6 system-ui,sans-serif}
 [hidden]{display:none!important}
 #access-gate{max-width:420px;margin:12vh auto;padding:28px;background:#1e293b;border:1px solid #475569;border-radius:16px;box-sizing:border-box}
-#access-gate h1{font-size:28px;line-height:1.2;margin:10px 0 18px}
+#access-gate h1{font-size:28px;line-height:1.2;margin:10px 0 18px;text-align:center}
+#access-gate .access-description{text-align:center}
+#access-gate .access-label{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap}
 #access-gate label{display:block;margin:16px 0 8px}
 #access-gate input,#access-gate button,#access-logout{font:inherit;box-sizing:border-box;border-radius:8px;padding:12px}
 #access-gate input{width:100%;background:#0f172a;color:#fff;border:1px solid #64748b}
@@ -17,9 +19,9 @@ body{margin:0;background:#0f172a;color:#f1f5f9;font:16px/1.6 system-ui,sans-seri
 <div id="access-gate">
 <div style="color:#f59e0b;font-size:13px;letter-spacing:.12em;text-align:center">СТРАТЕГ</div>
 <h1>Вход в тестирование</h1>
-<p>Введите пароль, чтобы открыть тесты.</p>
+<p class="access-description">Введите пароль, чтобы открыть тесты.</p>
 <form id="access-form">
-<label for="access-password">Пароль:</label>
+<label class="access-label" for="access-password">Пароль</label>
 <input id="access-password" type="password" autocomplete="current-password" required aria-describedby="access-error">
 <p id="access-error" role="alert"></p>
 <button type="submit">Войти</button>
