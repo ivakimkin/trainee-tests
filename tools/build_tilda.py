@@ -32,11 +32,12 @@ for filename, title, description in QUIZZES:
 fragment = '''<!-- Insert this entire fragment in ONE Tilda T123 HTML block. Set page password in Tilda before publishing. -->
 <section id="ural-tests" lang="ru">
 <style>
-#ural-tests {background:#0f172a;color:#f1f5f9;font:16px/1.6 system-ui,sans-serif;padding:clamp(24px,5vw,64px) 16px;min-height:70vh;box-sizing:border-box;}
+#ural-tests {background:#0f172a;color:#f1f5f9;font:16px/1.6 system-ui,sans-serif;padding:20px 16px 32px;min-height:70vh;box-sizing:border-box;}
 #ural-tests * {box-sizing:border-box;}
 #ural-tests [hidden] {display:none!important;}
 #ural-tests .ut-wrap {max-width:960px;margin:auto;}
 #ural-tests .ut-brand {text-align:center;color:#f59e0b;font-size:16px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;}
+#ural-tests #ut-heading:focus {outline:none;}
 #ural-tests h1 {text-align:center;font-size:clamp(28px,5vw,44px);line-height:1.15;margin:16px 0;color:#fff;font-weight:750;}
 #ural-tests #ut-menu > p {text-align:center;}
 #ural-tests p {color:#cbd5e1;margin:0 0 28px;}

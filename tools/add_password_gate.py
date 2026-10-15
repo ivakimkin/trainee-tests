@@ -26,15 +26,14 @@ body{margin:0;background:#0f172a;color:#f1f5f9;font:16px/1.6 system-ui,sans-seri
 #access-gate h1{font-size:28px;font-weight:700;line-height:1.2;margin:0 0 12px;text-align:center;text-wrap:balance}
 #access-gate .access-description{font-size:15px;line-height:1.5;color:#cbd5e1;text-align:center;margin:0 0 24px;text-wrap:balance}
 #access-gate .access-label{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap}
-#access-gate input,#access-gate button,#access-logout{font:inherit;box-sizing:border-box;border-radius:10px}
+#access-gate input,#access-gate button{font:inherit;box-sizing:border-box;border-radius:10px}
 #access-gate input{display:block;width:100%;height:48px;padding:10px 14px;background:#0f172a;color:#fff;border:1px solid #64748b;font-size:18px}
 #access-gate button{display:block;width:100%;min-height:48px;padding:10px 16px;margin-top:12px;background:#2563eb;color:#fff;border:0;font-weight:600;cursor:pointer}
 #access-gate button:hover{background:#1d4ed8}
 #access-gate button:disabled{opacity:.7;cursor:wait}
-#access-gate input:focus-visible,#access-gate button:focus-visible,#access-logout:focus-visible{outline:3px solid #f59e0b;outline-offset:3px}
+#access-gate input:focus-visible,#access-gate button:focus-visible:focus-visible{outline:3px solid #f59e0b;outline-offset:3px}
 #access-error{color:#fca5a5;font-size:14px;line-height:1.5;margin:12px 0 0}
 #access-error:empty{display:none}
-#access-logout{display:block;margin:16px 16px 0 auto;padding:12px;background:#1e293b;color:#fff;border:1px solid #64748b;cursor:pointer}
 @media(max-width:480px){#access-shell{padding-top:32px}#access-gate{padding:28px 24px;border-radius:16px}#access-gate h1{font-size:26px}}
 </style>
 <div id="access-shell">
@@ -51,14 +50,13 @@ body{margin:0;background:#0f172a;color:#f1f5f9;font:16px/1.6 system-ui,sans-seri
 <noscript>Для входа и прохождения тестов включите JavaScript.</noscript>
 </div>
 </div>
-<button id="access-logout" type="button" hidden>Выйти</button>
 '''
 script='''<script>
 (function(){
 const config=__CONFIG__;
 const key='ural-tests-access-'+config.digest;
-const gate=document.getElementById('access-gate'),tests=document.getElementById('ural-tests'),logout=document.getElementById('access-logout');
-function unlock(){document.getElementById('access-shell').hidden=true;gate.hidden=true;tests.hidden=false;logout.hidden=false;document.getElementById('ut-heading').focus();}
+const gate=document.getElementById('access-gate'),tests=document.getElementById('ural-tests');
+function unlock(){document.getElementById('access-shell').hidden=true;gate.hidden=true;tests.hidden=false;document.getElementById('ut-heading').focus();}
 try{if(sessionStorage.getItem(key)==='yes')unlock();}catch(e){}
 document.getElementById('access-form').addEventListener('submit',async function(event){
  event.preventDefault();const button=this.querySelector('button');button.disabled=true;
@@ -71,7 +69,6 @@ document.getElementById('access-form').addEventListener('submit',async function(
  }catch(e){error.textContent='Не удалось выполнить вход. Откройте страницу через HTTPS и повторите.';}
  finally{button.disabled=false;}
 });
-logout.addEventListener('click',function(){try{sessionStorage.removeItem(key);}catch(e){}location.reload();});
 })();
 </script>'''.replace('__CONFIG__',json.dumps(config))
 source=source.replace('<section id="ural-tests"',gate+'<section id="ural-tests"',1).replace('</body>',script+'</body>')
