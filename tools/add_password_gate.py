@@ -58,6 +58,7 @@ const key='ural-tests-access-'+config.digest;
 const gate=document.getElementById('access-gate'),tests=document.getElementById('ural-tests');
 function unlock(){document.getElementById('access-shell').hidden=true;gate.hidden=true;tests.hidden=false;document.getElementById('ut-heading').focus();}
 try{if(sessionStorage.getItem(key)==='yes')unlock();}catch(e){}
+window.addEventListener('ural-tests-lock',function(){try{sessionStorage.removeItem(key);}catch(e){}location.reload();});
 document.getElementById('access-form').addEventListener('submit',async function(event){
  event.preventDefault();const button=this.querySelector('button');button.disabled=true;
  const input=document.getElementById('access-password'),error=document.getElementById('access-error');

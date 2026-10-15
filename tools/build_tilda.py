@@ -27,12 +27,27 @@ for filename, title, description in QUIZZES:
  new ResizeObserver(function(){parent.postMessage({type:'ural-quiz-height',height:document.body.offsetHeight},'*');}).observe(document.body);
 })();
 </script>'''
+    if filename == 'Test_scretar_25v1.html':
+        source = source.replace('function restartQuiz() {\n    initQuiz();\n}', "function restartQuiz() {\n    parent.postMessage({type:'ural-quiz-lock'},'*');\n}")
+        source = source.replace('<div class="quiz-container" id="quiz-box">', '<div class="quiz-container" id="quiz-box"><div class="variant-toolbar"><span>1С:УНФ</span></div>')
+        extra += """<style>
+body {padding:4px !important;}
+.variant-toolbar {display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:8px;margin-bottom:20px;padding-bottom:16px;border-bottom:1px solid #334155;}
+.variant-toolbar span {grid-column:2;color:#f59e0b;font-size:20px;font-weight:800;white-space:nowrap;}
+#variant-back {justify-self:start;font:500 12px/1.4 system-ui,sans-serif;white-space:nowrap;background:transparent;color:#cbd5e1;border:1px solid #475569;border-radius:7px;padding:7px 9px;cursor:pointer;}
+#variant-back:hover {background:#334155;color:#fff;}
+#variant-back:focus-visible {outline:2px solid #f59e0b;outline-offset:3px;}
+#game-stage > .header-title,#result-stage > .header-title {display:none !important;}
+@media(max-width:420px){.variant-toolbar {grid-template-columns:1fr auto 1fr;}.variant-toolbar span {font-size:18px;}#variant-back {font-size:11px;padding:7px;}}
+</style>"""
     source = source.replace('</body>', extra + '</body>')
-    items.append(dict(title=title, description=description, html=base64.b64encode(source.encode()).decode()))
+    items.append(dict(internal_back=filename == 'Test_scretar_25v1.html', title=title, description=description, html=base64.b64encode(source.encode()).decode()))
 fragment = '''<!-- Insert this entire fragment in ONE Tilda T123 HTML block. Set page password in Tilda before publishing. -->
 <section id="ural-tests" lang="ru">
 <style>
 #ural-tests {background:#0f172a;color:#f1f5f9;font:16px/1.6 system-ui,sans-serif;padding:20px 16px 32px;min-height:70vh;box-sizing:border-box;}
+#ural-tests.ut-compact {padding-top:8px;}
+#ural-tests.ut-compact #ut-back {display:none;}
 #ural-tests * {box-sizing:border-box;}
 #ural-tests [hidden] {display:none!important;}
 #ural-tests .ut-wrap {max-width:960px;margin:auto;}
@@ -82,25 +97,28 @@ quizzes.forEach(function(quiz){
  const action=document.createElement('em');action.textContent='Открыть тест →';
  button.append(title,description,action);
  button.addEventListener('click',function(){
-  lastButton=button;
+  lastButton=button;root.classList.toggle('ut-compact',quiz.internal_back);
   frame=document.createElement('iframe');frame.title='Тест: '+quiz.title;
   frame.setAttribute('sandbox','allow-scripts');
   frame.srcdoc=new TextDecoder().decode(Uint8Array.from(atob(quiz.html),function(c){return c.charCodeAt(0);}));
   slot.replaceChildren(frame);menu.hidden=true;player.hidden=false;
-  root.querySelector('#ut-back').focus();root.scrollIntoView({block:'start'});
+  if(quiz.internal_back)frame.focus();else root.querySelector('#ut-back').focus();root.scrollIntoView({block:'start'});
  });
  root.querySelector('#ut-cards').append(button);
 });
 window.addEventListener('message',function(event){
- if(!frame||event.source!==frame.contentWindow||!event.data||event.data.type!=='ural-quiz-height')return;
+ if(!frame||event.source!==frame.contentWindow||!event.data)return;
+ if(event.data.type==='ural-quiz-lock'){window.dispatchEvent(new Event('ural-tests-lock'));return;}
+ if(event.data.type!=='ural-quiz-height')return;
  const height=event.data.height;
  if(typeof height==='number'&&Number.isFinite(height)&&height>0&&height<100000)frame.style.height=Math.ceil(height+8)+'px';
 });
-root.querySelector('#ut-back').addEventListener('click',function(){
+function returnToMenu(){
  if(!window.confirm('Вернуться к выбору теста? Текущее прохождение будет сброшено.'))return;
- slot.replaceChildren();frame=null;player.hidden=true;menu.hidden=false;
+ slot.replaceChildren();frame=null;player.hidden=true;menu.hidden=false;root.classList.remove('ut-compact');
  if(lastButton)lastButton.focus();
-});
+}
+root.querySelector('#ut-back').addEventListener('click',returnToMenu);
 })();
 </script>
 </section>
