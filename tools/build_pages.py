@@ -37,3 +37,5 @@ page = page.replace('</body>', bridge + '</body>').replace('<title>', '<meta nam
 </script>
 ''')
 print('Built docs/index.html and tilda/github-pages-embed.html')
+
+runpy.run_path(str(ROOT / 'tools/add_password_gate.py'))

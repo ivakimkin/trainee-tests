@@ -7,6 +7,11 @@ const assert = require('node:assert/strict');
    const page=await browser.newPage({viewport:{width,height:900}});
    const errors=[]; page.on('pageerror',e=>errors.push(e.message));
    await page.goto(process.env.TEST_URL || 'http://127.0.0.1:8000/tilda/preview.html');
+   if(await page.locator('#access-gate').count()) {
+    const password=process.env.TEST_PASSWORD || fs.readFileSync('/workspace/trainee-tests-password.txt','utf8').split('Пароль: ')[1].trim();
+    await page.locator('#access-password').fill(password);await page.locator('#access-form button').click();
+    await page.locator('#ural-tests').waitFor({state:'visible'});
+   }
    assert.equal(await page.locator('.ut-card').count(),4);
    for(let index=0;index<4;index++) {
     await page.locator('.ut-card').nth(index).click();
